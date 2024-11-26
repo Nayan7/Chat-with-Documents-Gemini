@@ -50,6 +50,7 @@ This project is a web application that allows users to upload PDF documents and 
 ```bash
 git clone https://github.com/Nayan7/Chat-with-PDF-Gemini.git
 cd chat-with-pdf-gemini
+```
 
 ### **2. Install Dependencies**
 Ensure you have Python installed on your system, then install the required dependencies. It is highly recommended to use a virtual environment for this.

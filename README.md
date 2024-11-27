@@ -55,16 +55,23 @@ cd chat-with-pdf-gemini
 ### **2. Install Dependencies**
 Ensure you have Python installed on your system, then install the required dependencies. It is highly recommended to use a virtual environment for this.  
 Create a Virtual Environment (optional but recommended):  
-python -m venv venv
-
-Activate the virtual environment:
+```bash
+python -m venv venv  
+```
+Activate the virtual environment:  
 For Windows:
+```bash
 venv\Scripts\activate
+```
 For Mac:
+```bash
 source venv/bin/activate
+```
 
-Install the necessary Python packages by running the following command:
-pip install -r requirements.txt
+Install the necessary Python packages by running the following command:  
+```bash
+pip install -r requirements.txt  
+```
 
 ### **3. Set up API Keys**
 You will need a Google API key to interact with Google Gemini. Follow these steps:
@@ -72,12 +79,16 @@ You will need a Google API key to interact with Google Gemini. Follow these step
 1) Sign up for Google Cloud and enable the Generative AI API.
 2) Obtain your API key from Google Cloud.
 
-Create a .env file in the root directory of your project, and add the following line with your API key:
+Create a .env file in the root directory of your project, and add the following line with your API key:  
+```bash
 GOOGLE_API_KEY=your_google_api_key_here
+```
 
 ### **4. Run the application**
-Now that you have set up the dependencies and API key, you can run the application:
+Now that you have set up the dependencies and API key, you can run the application:  
+```bash
 streamlit run app.py
+```
 
 This will start the application locally, and you should see a link in your terminal. Open the link in your browser to interact with the app.
 

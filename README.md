@@ -87,7 +87,7 @@ GOOGLE_API_KEY=your_google_api_key_here
 ### **4. Run the application**
 Now that you have set up the dependencies and API key, you can run the application:  
 ```bash
-streamlit run app.py
+streamlit run chatwithdocument.py
 ```
 
 This will start the application locally, and you should see a link in your terminal. Open the link in your browser to interact with the app.

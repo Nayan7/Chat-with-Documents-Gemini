@@ -53,8 +53,8 @@ cd chat-with-pdf-gemini
 ```
 
 ### **2. Install Dependencies**
-Ensure you have Python installed on your system, then install the required dependencies. It is highly recommended to use a virtual environment for this.
-Create a Virtual Environment (optional but recommended):
+Ensure you have Python installed on your system, then install the required dependencies. It is highly recommended to use a virtual environment for this.  
+Create a Virtual Environment (optional but recommended):  
 python -m venv venv
 
 Activate the virtual environment:

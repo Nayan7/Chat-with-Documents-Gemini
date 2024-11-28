@@ -10,7 +10,7 @@ from langchain.vectorstores import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
-
+from docx import Document
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
 
 def get_pdf_text(pdf_docs):
@@ -19,6 +19,15 @@ def get_pdf_text(pdf_docs):
         pdf_reader = PdfReader(pdf)
         for page in pdf_reader.pages:
             text+=page.extract_text()
+    return text
+
+def get_word_text(word_docs):
+    text = ''
+    for word in word_docs:
+        # Directly pass the UploadedFile object to python-docx
+        doc = Document(word)
+        for paragraph in doc.paragraphs:
+            text += paragraph.text + '\n'
     return text
 
 def get_text_chunks(text):
@@ -64,23 +73,44 @@ def user_input(user_question):
     st.write("Reply: ", response['output_text'])
 
 def main():
-    st.set_page_config('Chat With Multiple PDF')
-    st.header("Chat with Multiple PDF using Gemini👻")
+    st.set_page_config('Chat With Multiple Documents')
+    st.header("Chat with your Documents (Word & PDF) using Gemini👻")
 
-    user_question = st.text_input("Ask a Question from the PDF files")
+    user_question = st.text_input("Ask a Question from the documents uploaded")
 
     if user_question:
         user_input(user_question)
 
     with st.sidebar:
         st.title("Menu:")
-        pdf_docs = st.file_uploader("Upload your PDF Files and Click on the Submit and Process", accept_multiple_files=True)
+        st.markdown(
+            """
+            **Instructions:**
+            - Upload the PDF and/or Word documents you want to process.
+            - After uploading, click on the **Submit & Process** button to process your documents.
+            - Once processing is complete, ask your questions in the input box above.
+            """
+        )
+
+        pdf_docs = st.file_uploader("Upload your PDF Files", accept_multiple_files=True)
+        word_docs = st.file_uploader("Upload your Word Files", accept_multiple_files=True, type=["docx"])
+
         if st.button("Submit & Process"):
             with st.spinner("Processing..."):
-                raw_text = get_pdf_text(pdf_docs)
-                text_chunks = get_text_chunks(raw_text)
-                get_vector_store(text_chunks)
-                st.success("Done")
+                raw_pdf_text = get_pdf_text(pdf_docs) if pdf_docs else ''
+                raw_word_text = get_word_text(word_docs) if word_docs else ''
+
+                raw_text = raw_pdf_text + raw_word_text
+                if raw_text.strip():
+                    text_chunks = get_text_chunks(raw_text)
+                    get_vector_store(text_chunks)
+                    st.success("Documents processed successfully!")
+                else:
+                    st.warning("No valid documents to process. Please upload PDF or Word files.")
+                #raw_text = get_pdf_text(pdf_docs)
+                #text_chunks = get_text_chunks(raw_text)
+                #get_vector_store(text_chunks)
+                #st.success("Done")
 
 if __name__ == '__main__':
     main()

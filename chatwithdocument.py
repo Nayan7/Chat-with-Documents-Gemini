@@ -12,6 +12,7 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 from docx import Document
 genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+from langchain.document_loaders import UnstructuredURLLoader
 
 def get_pdf_text(pdf_docs):
     text = ''
@@ -30,6 +31,12 @@ def get_word_text(word_docs):
             text += paragraph.text + '\n'
     return text
 
+def get_url_text(urls):
+    loader = UnstructuredURLLoader(urls=urls)
+    documents = loader.load()
+    text = ''.join([doc.page_content for doc in documents])
+    print(f"Extracted text from URLs: {text[:500]}")
+    return text
 def get_text_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=1000)
     chunks = text_splitter.split_text(text)
@@ -94,13 +101,17 @@ def main():
 
         pdf_docs = st.file_uploader("Upload your PDF Files", accept_multiple_files=True)
         word_docs = st.file_uploader("Upload your Word Files", accept_multiple_files=True, type=["docx"])
+        url_input = st.text_area("Enter URLs (one per line):")
+        urls = [url.strip() for url in url_input.split("\n") if url.strip()]
 
         if st.button("Submit & Process"):
             with st.spinner("Processing..."):
                 raw_pdf_text = get_pdf_text(pdf_docs) if pdf_docs else ''
                 raw_word_text = get_word_text(word_docs) if word_docs else ''
+                raw_url_text = get_url_text(urls) if urls else ''
 
-                raw_text = raw_pdf_text + raw_word_text
+                raw_text = raw_pdf_text + raw_word_text + raw_url_text
+
                 if raw_text.strip():
                     text_chunks = get_text_chunks(raw_text)
                     get_vector_store(text_chunks)
